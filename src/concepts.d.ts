@@ -1,4 +1,6 @@
-type Position = { x: number, y: number} | number[];
+interface PositionXY { x: number, y: number }
+
+type Position = PositionXY | [number, number];
 
 type ForceSpecification = string | LuaForce;
 
@@ -16,7 +18,9 @@ type FluidSpecification = Fluid | LuaFluidPrototype | string;
 
 type EntityPrototypeSpecification = LuaEntity | LuaEntityPrototype | string;
 
-type Vector = number[];
+interface VectorXY { x: number, y: number }
+
+type Vector = VectorXY | [number, number];
 
 type SpritePath = string;
 
@@ -52,9 +56,7 @@ type CollisionMaskLayer = 'ground-tile' | 'water-tile' | 'resource-layer' | 'doo
     'floor-layer' | 'item-layer' | 'ghost-layer' | 'object-layer' | 'player-layer' | 'train-layer' |
     'layer-11' | 'layer-12' | 'layer-13' | 'layer-14' | 'layer-15' | 'not-setup';
 
-type CollisionMask = {
-    [key in CollisionMaskLayer]: boolean
-};
+type CollisionMask = CollisionMaskLayer[];
 
 type CollisionMaskWithFlags = CollisionMask & {
     'not-colliding-with-itself': boolean,
@@ -68,18 +70,14 @@ type EntityPrototypeFlagValue = 'not-rotatable' | 'placeable-neutral' | 'placeab
     'not-deconstructable' | 'not-blueprintable' | 'hide-from-bonus-gui' | 'hide-alt-info' |
     'fast-replaceable-no-cross-type-while-moving' | 'no-gap-fill-while-building' | 'not-flammable' |
     'no-automated-item-removal' | 'no-automated-item-insertion' | 'no-copy-paste' | 'not-selectable-in-game' |
-    'not-upgradable';
+    'not-upgradable' | 'hidden';
 
-type EntityPrototypeFlags = {
-    [key in EntityPrototypeFlagValue]: true
-};
+type EntityPrototypeFlags = EntityPrototypeFlagValue[];
 
 type ItemPrototypeFlagValue = 'hidden' | 'hide-from-bonus-gui' | 'hide-from-fuel-tooltip' | 'not-stackable' |
     'can-extend-inventory' | 'primary-place-result' | 'mod-openable' | 'only-in-cursor' | 'always-show';
 
-type ItemPrototypeFlags = {
-    [key in ItemPrototypeFlagValue]: true
-};
+type ItemPrototypeFlags = ItemPrototypeFlagValue[];
 
 type CursorBoxRenderType = 'electricity' | 'copy' | 'not-allowed' | 'pair' | 'logistics' | 'train-visualisation';
 
@@ -515,7 +513,8 @@ interface Modifier {
         'mining-drill-productivity-bonus' | 'train-braking-force-bonus' | 'zoom-to-world-enabled' |
         'zoom-to-world-ghost-building-enabled' | 'zoom-to-world-blueprint-enabled' |
         'zoom-to-world-deconstruction-planner-enabled' | 'zoom-to-world-selection-tool-enabled' |
-        'worker-robot-battery' | 'laboratory-productivity' | 'follower-robot-lifetime' | 'artillery-range' | 'nothing'
+    'worker-robot-battery' | 'laboratory-productivity' | 'follower-robot-lifetime' | 'artillery-range' | 'nothing'
+    recipe?: string
 }
 
 interface GunSpeedModifier extends Modifier {
@@ -615,11 +614,15 @@ interface BeamTarget {
     position?: Position
 }
 
-interface BoundingBox {
+interface BoundingBoxImpl<T> {
     left_top: Position
     right_bottom: Position
     orientation: number
 }
+
+type BoundingBoxXY = BoundingBoxImpl<PositionXY>;
+
+type BoundingBox = BoundingBoxImpl<Position> | BoundingBoxXY;
 
 interface ProgrammableSpeakerParameters {
     playback_volume: number
@@ -683,7 +686,7 @@ interface CircuitConditionSpecification {
 interface ProgrammableSpeakerCircuitParameters {
     signal_value_is_pitch: boolean
     instrument_id: number
-    node_id: number
+    note_id: number
 }
 
 interface ArithmeticCombinatorParameters {

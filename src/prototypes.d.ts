@@ -779,7 +779,7 @@ interface PrototypeEntity extends PrototypeBase {
     build_base_evolution_requirement?: number
     build_sound?: Sound
     close_sound?: Sound
-    collision_box?: BoundingBox
+    collision_box?: BoundingBox | {}
     collision_mask?: CollisionMask
     created_effect?: Trigger
     created_smoke?: CreateTrivialSmokeEffectItem

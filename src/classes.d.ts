@@ -69,7 +69,7 @@ interface LuaGameScript {
     disable_replay(this: void): void
     disable_tutorial_triggers(this: void): void
     direction_to_string(this: void, direction: defines.direction): void
-    print(this: void, message: LocalisedString, color: Color): void
+    print(this: void, message: LocalisedString, color?: Color): void
     create_random_generator(this: void, seed?: number): LuaRandomGenerator
     check_prototype_translations(this: void): void
     play_sound(
@@ -264,7 +264,7 @@ interface LuaBootstrap {
         event: defines.events | defines.events[] | string,
         callback: (this: void, event: T) => void): void
     on_nth_tick(this: void, tick: number | number[] | null, f: (this: void, event: NthTickEvent) => void): void
-    register_on_entity_destroyed(entity: LuaEntity): number
+    register_on_entity_destroyed(this: void, entity: LuaEntity): number
     generate_event_name(this: void): number
     get_event_handler(this: void, event: number): () => any
     raise_event(this: void, event: number, table: object): void
@@ -423,7 +423,7 @@ interface LuaCombinatorControlBehavior extends LuaControlBehavior {
 interface LuaConstantCombinatorControlBehavior extends LuaControlBehavior {
     set_signal(this: void, index: number, signal: Signal): void
     get_signal(this: void, index: number): Signal
-    parameters: ConstantCombinatorParameters | null
+    parameters: ConstantCombinatorParameters[] | null
     enabled: boolean
     readonly signals_count: number
     readonly valid: boolean
@@ -641,7 +641,7 @@ interface LuaEntity extends LuaControl {
     get_burnt_result_inventory(this: void): LuaInventory | null
     damage(this: void, damage: number, force: ForceSpecification, type?: string, dealer?: LuaEntity): number
     can_be_destroyed(this: void): boolean
-    destroy(this: void, opts: { do_cliff_correction?: boolean, raise_destroy?: boolean}): boolean
+    destroy(this: void, opts?: { do_cliff_correction?: boolean, raise_destroy?: boolean}): boolean
     set_command(this: void, command: Command): void
     has_command(this: void): boolean
     die(this: void, force: ForceSpecification | null, cause?: LuaEntity): boolean
@@ -662,7 +662,7 @@ interface LuaEntity extends LuaControl {
     disconnect_neighbour(
         this: void,
         target?: defines.wire_type | LuaEntity | {
-            write: defines.wire_type,
+            wire: defines.wire_type,
             target_entity: LuaEntity,
             source_circuit_id?: number,
             target_circuit_id?: number,
@@ -694,10 +694,12 @@ interface LuaEntity extends LuaControl {
     launch_rocket(this: void): boolean
     revive(
         this: void,
-        opts: { return_item_request_proxy?: boolean, raise_revive?: boolean}): {[key: string]: number} | null
+        opts?: { return_item_request_proxy?: boolean, raise_revive?: boolean }): { [key: string]: number } | null
+
+    /** @tupleReturn */
     silent_revive(
         this: void,
-        opts: { return_item_request_proxy?: boolean, raise_revive?: boolean}): {[key: string]: number} | null
+        opts?: { return_item_request_proxy?: boolean, raise_revive?: boolean }): [{ [key: string]: number }, LuaEntity | undefined] | [undefined, undefined]
     get_connected_rail(
         this: void,
         table: {
@@ -1887,10 +1889,11 @@ interface LuaInventory {
     get_filter(this: void, index: number): string
     set_filter(this: void, index: number, filter: string): boolean
     find_item_stack(this: void, item: string): LuaItemStack | null
-    find_empty_stack(this: void, item: string): LuaItemStack | null
+    /** @tupleReturn */
+    find_empty_stack(this: void, item?: string): [LuaItemStack, number] | [undefined, undefined]
     count_empty_stacks(this: void, include_filtered?: boolean): number
     // docs have this as a void, but should probably be number?
-    get_insertable_count(this: void, item: string): void
+    get_insertable_count(this: void, item: string): number
     sort_and_merge(this: void): void
     resize(this: void, size: number): void
     destory(this: void): void
@@ -2139,7 +2142,7 @@ interface LuaRecipe {
     readonly localised_name: LocalisedString
     readonly localised_description: LocalisedString
     readonly prototype: LuaRecipePrototype
-    readonly enabled: boolean
+    enabled: boolean
     readonly category: string
     readonly ingredients: Ingredient[]
     readonly products: Product[]
@@ -2735,12 +2738,12 @@ type GuiElementType = 'button' | 'sprite-button' | 'checkbox' | 'flow' | 'frame'
 
 interface GuiElementData {
     type: GuiElementType
-    name: string
+    name?: string
     caption?: LocalisedString
     tooltip?: LocalisedString
     enabled?: boolean
     ignored_by_interaction?: boolean
-    style?: string
+    style?: string,
 }
 
 interface ButtonGuiElementData extends GuiElementData {
@@ -2992,7 +2995,7 @@ interface LuaGuiElement {
     vertical_scroll_policy: 'auto' | 'never' | 'always' | 'auto-and-reserve-space'
     readonly type: string
     readonly children: LuaGuiElement[]
-    readonly items: LocalisedString[]
+    items: LocalisedString[]
     selected_index: number
     number: number
     show_percent_for_small_numbers: boolean
@@ -3005,7 +3008,7 @@ interface LuaGuiElement {
     minimap_player_index: number
     force: string
     readonly elem_type: string
-    elem_value: string | SignalID
+    elem_value: string | SignalID | undefined
     elem_filters: LuaItemPrototypeFilter | LuaTilePrototypeFilter |
         LuaEntityPrototypeFilter | LuaFluidPrototypeFilter | LuaRecipePrototypeFilter |
         LuaDecorativePrototypeFilter | LuaAchievementPrototypeFilter | LuaEquipmentPrototypeFilter |
@@ -3032,7 +3035,7 @@ interface LuaGuiElement {
     drag_target: LuaGuiElement
     selected_tab_index: number
     readonly tabs: Array<{ tab: LuaGuiElement, content: LuaGuiElement}>
-    entity: LuaEntity
+    entity: LuaEntity | undefined
     switch_state: string
     allow_none_state: boolean
     left_label_caption: LocalisedString
@@ -3041,6 +3044,9 @@ interface LuaGuiElement {
     right_label_tooltip: LocalisedString
     readonly valid: boolean
     help(this: void): string
+    tags: {
+        [key: string]: any,
+    }
 }
 
 interface LuaStyle {

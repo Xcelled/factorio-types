@@ -1,969 +1,2880 @@
-interface event {
-    name: defines.events
-    tick: number
-}
-
-interface on_tick extends event {
-}
-
-interface on_ai_command_completed extends event {
-    unit_number: number
-    result: defines.behavior_result
-    was_distracted: boolean
-}
-
-interface on_area_cloned extends event {
-    source_surface: LuaSurface
-    source_area: BoundingBox
-    destination_surface: LuaSurface
-    destination_area: BoundingBox
-    destination_force?: LuaForce
-    clone_tiles: boolean
-    clone_entities: boolean
-    clone_decoratives: boolean
-    clear_destination: boolean
-}
-
-interface on_biter_base_built extends event {
-    entity: LuaEntity
-}
-
-interface on_build_base_arrived extends event {
-    unit: LuaEntity | null
-    group: LuaUnitGroup | null
-}
-
-interface on_built_entity extends event {
-    created_entity: LuaEntity
-    player_index: number
-    stack: LuaItemStack
-    item?: LuaItemPrototype
-    tags?: Tags
-}
-
-interface on_cancelled_deconstruction extends event {
-    entity: LuaEntity
-    player_index?: number
-}
-
-interface on_cancelled_upgrade extends event {
-    entity: LuaEntity
-    player_index?: number
-}
-
-interface on_character_corpse_expired extends event {
-    corpse: LuaEntity
-}
-
-interface on_chart_tag_added extends event {
-    tag: LuaCustomChartTag
-    force: LuaForce
-    player_index?: number
-}
-
-interface on_chart_tag_modified extends event {
-    tag: LuaCustomChartTag
-    player_index?: number
-    force: LuaForce
-    old_text: string
-    old_icon: SignalID
-    old_player_index?: number
-}
-
-interface on_chart_tag_removed extends event {
-    tag: LuaCustomChartTag
-    force: LuaForce
-    player_index?: number
-}
-
-interface on_chunk_charted extends event {
-    surface_index: number
-    position: ChunkPosition
-    area: BoundingBox
-    force: LuaForce
-}
-
-interface on_chunk_deleted extends event {
-    surface_index: number
-    positions: ChunkPosition[]
-}
-
-interface on_chunk_generated extends event {
-    area: BoundingBox
-    position: ChunkPosition
-    surface: LuaSurface
-}
-
-interface on_combat_robot_expired extends event {
-    robot: LuaEntity
-    owner?: LuaEntity
-}
-
-interface on_console_chat extends event {
-    player_index?: number
-    message: string
-}
-
-interface on_console_command extends event {
-    player_index?: number
-    command: string
-    parameters: string
-}
-
-interface on_cutscene_cancelled extends event {
-    player_index: number
-}
-
-interface on_cutscene_waypoint_reached extends event {
-    player_index: number
-    waypoint_index: number
-}
-
-interface on_difficulty_settings_changed extends event {
-    old_recipe_difficulty: number
-    old_technology_difficulty: number
-}
-
-interface on_entity_cloned extends event {
-    source: LuaEntity
-    destination: LuaEntity
-}
-
-interface on_entity_damaged extends event {
-    entity: LuaEntity
-    damage_type: LuaDamagePrototype
-    original_damage_amount: number
-    final_damage_amount: number
-    final_health: number
-    cause?: LuaEntity
-    force?: LuaForce
-}
-
-interface on_entity_destroyed extends event {
-    registration_number: number
-    unit_number?: number
-}
-
-interface on_entity_died extends event {
-    entity: LuaEntity
-    cause?: LuaEntity
-    loot: LuaInventory
-    force?: LuaForce
-}
-
-interface on_entity_renamed extends event {
-    player_index?: number
-    by_script: boolean
-    entity: LuaEntity
-    old_name: string
-}
-
-interface on_entity_settings_pasted extends event {
-    player_index: number
-    source: LuaEntity
-    destination: LuaEntity
-}
-
-interface on_entity_spawned extends event {
-    spawner: LuaEntity
-    entity: LuaEntity
-}
-
-interface on_force_cease_fire_changed extends event {
-    force: LuaForce
-    other_force: LuaForce
-    added: boolean
-}
-
-interface on_force_created extends event {
-    force: LuaForce
-}
-
-interface on_force_friends_changed extends event {
-    force: LuaForce
-    other_force: LuaForce
-    added: boolean
-}
-
-interface on_force_reset extends event {
-    force: LuaForce
-}
-
-interface on_forces_merged extends event {
-    source_name: string
-    source_index: number
-    destination: LuaForce
-}
-
-interface on_forces_merging extends event {
-    source: LuaForce
-    destination: LuaForce
-}
-
-interface on_game_created_from_scenario extends event {
-}
-
-interface on_gui_checked_state_change extends event {
-    element: LuaGuiElement
-    player_index: number
-}
-
-interface on_gui_click extends event {
-    element: LuaGuiElement
-    player_index: number
-    button: defines.mouse_button_type
-    alt: boolean
-    control: boolean
-    shift: boolean
-}
-
-interface on_gui_closed extends event {
-    player_index: number
-    gui_type: defines.gui_type
-    entity?: LuaEntity
-    item?: LuaItemStack
-    equipment?: LuaEquipment
-    other_player?: LuaPlayer
-    element?: LuaGuiElement
-    technology?: LuaTechnology
-    tile_position?: TilePosition
-}
-
-interface on_gui_confirmed extends event {
-    element: LuaGuiElement
-    player_index: number
-    alt: boolean
-    control: boolean
-    shift: boolean
-}
-
-interface on_gui_elem_changed extends event {
-    element: LuaGuiElement
-    player_index: number
-}
-
-interface on_gui_location_changed extends event {
-    element: LuaGuiElement
-    player_index: number
-}
-
-interface on_gui_opened extends event {
-    player_index: number
-    gui_type: defines.gui_type
-    entity?: LuaEntity
-    item?: LuaItemStack
-    equipment?: LuaEquipment
-    other_player?: LuaPlayer
-    element?: LuaGuiElement
-}
-
-interface on_gui_selected_tab_changed extends event {
-    element: LuaGuiElement
-    player_index: number
-}
-
-interface on_gui_selection_state_changed extends event {
-    element: LuaGuiElement
-    player_index: number
-}
-
-interface on_gui_switch_state_changed extends event {
-    element: LuaGuiElement
-    player_index: number
-}
-
-interface on_gui_text_changed extends event {
-    element: LuaGuiElement
-    player_index: number
-}
-
-interface on_gui_value_changed extends event {
-    element: LuaGuiElement
-    player_index: number
-}
-
-interface on_land_mine_armed extends event {
-    mine: LuaEntity
-}
-
-interface on_lua_shortcut extends event {
-    player_index: number
-    prototype_name: string
-}
-
-interface on_marked_for_deconstruction extends event {
-    entity: LuaEntity
-    player_index?: number
-}
-
-interface on_marked_for_upgrade extends event {
-    entity: LuaEntity
-    target: LuaEntityPrototype
-    player_index?: number
-}
-
-interface on_market_item_purchased extends event {
-    player_index: number
-    market: LuaEntity
-    offer_index: number
-    count: number
-}
-
-interface on_mod_item_opened extends event {
-    player_index: number
-    item: LuaItemPrototype
-}
-
-interface on_permission_group_added extends event {
-    player_index: number
-    group: LuaPermissionGroup
-}
-
-interface on_permission_group_deleted extends event {
-    player_index: number
-    group_name: string
-    id: number
-}
-
-interface on_permission_group_edited extends event {
-    player_index: number
-    group: LuaPermissionGroup
-    type: string
-    action: defines.input_action
-    other_player_index: number
-    old_name: string
-    new_name: string
-}
-
-interface on_permission_string_imported extends event {
-    player_index: number
-}
-
-interface on_picked_up_item extends event {
-    item_stack: SimpleItemStack
-    player_index: number
-}
-
-interface on_player_alt_selected_area extends event {
-    player_index: number
-    surface: LuaSurface
-    area: BoundingBox
-    item: string
-    entities: LuaEntity[]
-    tiles: LuaTile[]
-}
-
-interface on_player_ammo_inventory_changed extends event {
-    player_index: number
-}
-
-interface on_player_armor_inventory_changed extends event {
-    player_index: number
-}
-
-interface on_player_banned extends event {
-    player_index?: number
-    player_name: string
-    by_player?: number
-    reason?: string
-}
-
-interface on_player_built_tile extends event {
-    player_index: number
-    surface_index: number
-    tiles: OldTileAndPosition[]
-    tile: LuaTilePrototype
-    item?: LuaItemPrototype
-    stack?: LuaItemStack
-}
-
-interface on_player_cancelled_crafting extends event {
-    player_index: number
-    items: LuaInventory
-    recipe: LuaRecipe
-    cancel_count: number
-}
-
-interface on_player_changed_force extends event {
-    player_index: number
-    force: LuaForce
-}
-
-interface on_player_changed_surface extends event {
-    player_index: number
-    surface_index: number
-}
-
-interface on_player_cheat_mode_disabled extends event {
-    player_index: number
-}
-
-interface on_player_cheat_mode_enabled extends event {
-    player_index: number
-}
-
-interface on_player_clicked_gps_tag extends event {
-    player_index: number
-    position: Position
-    surface: string
-}
-
-interface on_player_configured_blueprint extends event {
-    player_index: number
-}
-
-interface on_player_configured_spider_remote extends event {
-    player_index: number
-    vehicle: LuaEntity
-}
-
-interface on_player_crafted_item extends event {
-    item_stack: LuaItemStack
-    player_index: number
-    recipe: LuaRecipe
-}
-
-interface on_player_created extends event {
-    player_index: number
-}
-
-interface on_player_cursor_stack_changed extends event {
-    player_index: number
-}
-
-interface on_player_deconstructed_area extends event {
-    player_index: number
-    area: BoundingBox
-    item: string
-    alt: boolean
-}
-
-interface on_player_demoted extends event {
-    player_index: number
-}
-
-interface on_player_died extends event {
-    player_index: number
-    cause?: LuaEntity
-}
-
-interface on_player_display_resolution_changed extends event {
-    player_index: number
-    old_resolution: DisplayResolution
-}
-
-interface on_player_display_scale_changed extends event {
-    player_index: number
-    old_scale: number
-}
-
-interface on_player_driving_state_changed extends event {
-    player_index: number
-    entity?: LuaEntity
-}
-
-interface on_player_dropped_item extends event {
-    player_index: number
-    entity: LuaEntity
-}
-
-interface on_player_fast_transferred extends event {
-    player_index: number
-    entity: LuaEntity
-    from_player: boolean
-}
-
-interface on_player_flushed_fluid extends event {
-    player_index: number
-    fluid: string
-    amount: number
-    entity: LuaEntity
-    only_this_entity: boolean
-}
-
-interface on_player_gun_inventory_changed extends event {
-    player_index: number
-}
-
-interface on_player_joined_game extends event {
-    player_index: number
-}
-
-interface on_player_kicked extends event {
-    player_index: number
-    by_player?: number
-    reason?: string
-}
-
-interface on_player_left_game extends event {
-    player_index: number
-}
-
-interface on_player_main_inventory_changed extends event {
-    player_index: number
-}
-
-interface on_player_mined_entity extends event {
-    player_index: number
-    entity: LuaEntity
-    buffer: LuaInventory
-}
-
-interface on_player_mined_item extends event {
-    item_stack: SimpleItemStack
-    player_index: number
-}
-
-interface on_player_mined_tile extends event {
-    player_index: number
-    surface_index: number
-    tiles: OldTileAndPosition[]
-}
-
-interface on_player_muted extends event {
-    player_index: number
-}
-
-interface on_player_pipette extends event {
-    player_index: number
-    item: LuaItemPrototype
-    used_cheat_mode: boolean
-}
-
-interface on_player_placed_equipment extends event {
-    player_index: number
-    equipment: LuaEquipment
-    grid: LuaEquipmentGrid
-}
-
-interface on_player_promoted extends event {
-    player_index: number
-}
-
-interface on_player_removed extends event {
-    player_index: number
-}
-
-interface on_player_removed_equipment extends event {
-    player_index: number
-    grid: LuaEquipmentGrid
-    equipment: string
-    count: number
-}
-
-interface on_player_repaired_entity extends event {
-    player_index: number
-    entity: LuaEntity
-}
-
-interface on_player_respawned extends event {
-    player_index: number
-    player_port?: LuaEntity
-}
-
-interface on_player_rotated_entity extends event {
-    entity: LuaEntity
-    previous_direction: defines.direction
-    player_index: number
-}
-
-interface on_player_selected_area extends event {
-    player_index: number
-    surface: LuaSurface
-    area: BoundingBox
-    item: string
-    entities: LuaEntity[]
-    tiles: LuaTile[]
-}
-
-interface on_player_set_quick_bar_slot extends event {
-    player_index: number
-}
-
-interface on_player_setup_blueprint extends event {
-    player_index: number
-    area: BoundingBox
-    item: string
-    alt: boolean
-    mapping: LuaLazyLoadedValue<{[key: number]: LuaEntity}>
-}
-
-interface on_player_toggled_alt_mode extends event {
-    player_index: number
-}
-
-interface on_player_toggled_map_editor extends event {
-    player_index: number
-}
-
-interface on_player_trash_inventory_changed extends event {
-    player_index: number
-}
-
-interface on_player_unbanned extends event {
-    player_index?: number
-    player_name: string
-    by_player?: number
-    reason?: string
-}
-
-interface on_player_unmuted extends event {
-    player_index: number
-}
-
-interface on_player_used_capsule extends event {
-    player_index: number
-    item: LuaItemPrototype
-    position: Position
-}
-
-interface on_player_used_spider_remote extends event {
-    player_index: number
-    vehicle: LuaEntity
-    position: Position
-    success: boolean
-}
-
-interface on_post_entity_died extends event {
-    ghost?: LuaEntity
-    force?: LuaForce
-    position: Position
-    prototype: LuaEntityPrototype
-    corpses: LuaEntity[]
-    surface_index: number
-    unit_number?: number
-}
-
-interface on_pre_chunk_deleted extends event {
-    surface_index: number
-    positions: ChunkPosition[]
-}
-
-interface on_pre_entity_settings_pasted extends event {
-    player_index: number
-    source: LuaEntity
-    destination: LuaEntity
-}
-
-interface on_pre_ghost_deconstructed extends event {
-    player_index?: number
-    ghost: LuaEntity
-}
-
-interface on_pre_permission_group_deleted extends event {
-    player_index: number
-    group: LuaPermissionGroup
-}
-
-interface on_pre_permission_string_imported extends event {
-    player_index: number
-}
-
-interface on_pre_player_crafted_item extends event {
-    player_index: number
-    recipe: LuaRecipe
-    items: LuaInventory
-}
-
-interface on_pre_player_died extends event {
-    player_index: number
-    cause?: LuaEntity
-}
-
-interface on_pre_player_left_game extends event {
-    player_index: number
-}
-
-interface on_pre_player_mined_item extends event {
-    entity: LuaEntity
-    player_index: number
-}
-
-interface on_pre_player_removed extends event {
-    player_index: number
-}
-
-interface on_pre_player_toggled_map_editor extends event {
-    player_index: number
-}
-
-interface on_pre_robot_exploded_cliff extends event {
-    robot: LuaEntity
-    cliff: LuaEntity
-    item: LuaItemPrototype
-}
-
-interface on_pre_script_inventory_resized extends event {
-    player_index?: number
-    mod: string
-    inventory: LuaInventory
-    old_size: number
-    new_size: number
-}
-
-interface on_pre_surface_cleared extends event {
-    surface_index: number
-}
-
-interface on_pre_surface_deleted extends event {
-    surface_index: number
-}
-
-interface on_put_item extends event {
-    position: Position
-    player_index: number
-    shift_building: boolean
-    built_by_moving: boolean
-    direction: defines.direction
-}
-
-interface on_research_finished extends event {
-    research: LuaTechnology
-    by_script: boolean
-}
-
-interface on_research_started extends event {
-    research: LuaTechnology
-    last_research?: LuaTechnology
-}
-
-interface on_resource_depleted extends event {
-    entity: LuaEntity
-}
-
-interface on_robot_built_entity extends event {
-    robot: LuaEntity
-    created_entity: LuaEntity
-    stack: LuaItemStack
-    tags?: Tags
-}
-
-interface on_robot_built_tile extends event {
-    robot: LuaEntity
-    tiles: OldTileAndPosition[]
-    tile: LuaTilePrototype
-    item: LuaItemPrototype
-    stack: LuaItemStack
-    surface_index: number
-}
-
-interface on_robot_exploded_cliff extends event {
-    robot: LuaEntity
-    item: LuaItemPrototype
-}
-
-interface on_robot_mined extends event {
-    robot: LuaEntity
-    item_stack: SimpleItemStack
-}
-
-interface on_robot_mined_entity extends event {
-    robot: LuaEntity
-    entity: LuaEntity
-    buffer: LuaInventory
-}
-
-interface on_robot_mined_tile extends event {
-    robot: LuaEntity
-    tiles: OldTileAndPosition[]
-    surface_index: number
-}
-
-interface on_robot_pre_mined extends event {
-    robot: LuaEntity
-    entity: LuaEntity
-}
-
-interface on_rocket_launch_ordered extends event {
-    rocket: LuaEntity
-    rocket_silo: LuaEntity
-    player_index?: number
-}
-
-interface on_rocket_launched extends event {
-    rocket: LuaEntity
-    rocket_silo: LuaEntity
-    player_index?: number
-}
-
-interface on_runtime_mod_setting_changed extends event {
-    player_index: number
-    setting: string
-    setting_type: 'runtime-per-user' | 'runtime-global'
-}
-
-interface on_script_inventory_resized extends event {
-    player_index?: number
-    mod: string
-    inventory: LuaInventory
-    old_size: number
-    new_size: number
-    overflow_inventory: LuaInventory
-}
-
-interface on_script_path_request_finished extends event {
-    path: Array<{position: Position, needs_destroy_to_reach: boolean}> | null
-    id: number
-    try_again_later: boolean
-}
-
-interface on_script_trigger_effect extends event {
-    effect_id: string
-    surface_index: number
-    source_position?: Position
-    source_entity?: LuaEntity
-    target_position?: Position
-    target_entity?: LuaEntity
-}
-
-interface on_sector_scanned extends event {
-    radar: LuaEntity
-    chunk_position: ChunkPosition
-    area: BoundingBox
-}
-
-interface on_selected_entity_changed extends event {
-    player_index: number
-    last_entity?: LuaEntity
-}
-
-interface on_string_translated extends event {
-    player_index: number
-    localised_string: LocalisedString
-    result: string
-    translated: boolean
-}
-
-interface on_surface_cleared extends event {
-    surface_index: number
-}
-
-interface on_surface_created extends event {
-    surface_index: number
-}
-
-interface on_surface_deleted extends event {
-    surface_index: number
-}
-
-interface on_surface_imported extends event {
-    surface_index: number
-    original_name: string
-}
-
-interface on_surface_renamed extends event {
-    surface_index: number
-    old_name: string
-    new_name: string
-}
-
-interface on_technology_effect_reset extends event {
-    force: LuaForce
-}
-
-interface on_train_state_changed extends event {
-    train: LuaTrain
-    old_state: defines.train_state
-}
-
-interface on_train_created extends event {
-    train: LuaTrain
-    old_train_id_1?: number
-    old_train_id_2?: number
-}
-
-interface on_train_schedule_changed extends event {
-    train: LuaTrain
-    player_index?: number
-}
-
-interface on_trigger_created_entity extends event {
-    entity: LuaEntity
-    source?: LuaEntity
-}
-
-interface on_trigger_fired_artillery extends event {
-    entity: LuaEntity
-    source?: LuaEntity
-}
-
-interface on_unit_added_to_group extends event {
-    unit: LuaEntity
-    group: LuaUnitGroup
-}
-
-interface on_unit_group_created extends event {
-    group: LuaUnitGroup
-}
-
-interface on_unit_group_finished_gathering extends event {
-    group: LuaUnitGroup
-}
-
-interface on_unit_removed_from_group extends event {
-    unit: LuaEntity
-    group: LuaUnitGroup
-}
-
-interface script_raised_built extends event {
-    entity: LuaEntity
-}
-
-interface script_raised_destroy extends event {
-    entity: LuaEntity
-}
-
-interface script_raised_revive extends event {
-    entity: LuaEntity
-    tags?: Tags
-}
-
-interface script_raised_set_tiles extends event {
-    surface_index: number
-    tiles: Array<{name: string, position: Position}>
-}
-
-type EventFilters = EventFilter[];
-
 interface EventFilter {
     filter: string
     mode?: 'or' | 'and'
     invert?: boolean
 }
 
-interface StandardEntityEventFilter extends EventFilter {
-    filter: 'ghost' | 'rail' | 'rail-signal' | 'rolling-stock' | 'robot-with-logistics-interface' | 'vehicle' |
-        'turret' | 'crafting-machine' | 'wall-connectable' | 'transport-belt-connectable' |
-        'circuit-network-connectable'
-}
+type EventFilters = EventFilter[];
 
-interface StandardEntityEventFilterTyped extends EventFilter {
-    filter: 'type' | 'ghost_type'
-    type: string
-}
+/**
+ * Every event contains at least the <code>name</code> and <code>tick</code> attributes. Other events may include
+ * some additional attributes, specific to the event.
+ */
+interface event {
+    /**
+     * Identifier of the event
+     */
+    readonly name: defines.events
+    /**
+     * Tick the event was generated.
+     */
+    readonly tick: uint
 
-interface StandardEntityEventFilterNamed extends EventFilter {
-    filter: 'name' | 'ghost_name'
-    name: string
 }
+/**
+ * It is fired once every tick. Since this event is fired every tick, its handler shouldn&apos;t
+ * include performance heavy code.
+ */
+interface on_tick extends event {
 
-interface StandardEntityEventFilterForce extends EventFilter {
-    filter: 'force'
-    force: string
 }
+/**
+ * Called when a unit/group completes a command.
+ */
+interface on_ai_command_completed extends event {
+    /**
+     * unit_number/group_number of the unit/group which just completed a command.
+     */
+    readonly unit_number: uint
+    /**
+     *
+     */
+    readonly result: defines.behavior_result
+    /**
+     * Was this command generated by a distraction.
+     */
+    readonly was_distracted: boolean
 
-interface StandardEntityEventFilterDamageAmount extends EventFilter {
-    filter: 'original-damage-amount' | 'final-damage-amount'
-    comparison: ComparatorString
-    value: number
 }
+/**
+ * Called when an area of the map is cloned.
+ */
+interface on_area_cloned extends event {
+    /**
+     *
+     */
+    readonly source_surface: LuaSurface
+    /**
+     *
+     */
+    readonly source_area: BoundingBox
+    /**
+     *
+     */
+    readonly destination_surface: LuaSurface
+    /**
+     *
+     */
+    readonly destination_area: BoundingBox
+    /**
+     * (optional)
+     */
+    readonly destination_force?: LuaForce
+    /**
+     *
+     */
+    readonly clone_tiles: boolean
+    /**
+     *
+     */
+    readonly clone_entities: boolean
+    /**
+     *
+     */
+    readonly clone_decoratives: boolean
+    /**
+     *
+     */
+    readonly clear_destination_entities: boolean
+    /**
+     *
+     */
+    readonly clear_destination_decoratives: boolean
 
-interface StandardEntityEventFilterDamageType extends EventFilter {
-    filter: 'damage-type'
-    type: string
 }
+/**
+ * Called when a biter migration builds a base.
+ */
+interface on_biter_base_built extends event {
+    /**
+     * The built entity.
+     */
+    readonly entity: LuaEntity
 
-interface StandardEntityEventFilterFinalHealth extends EventFilter {
-    filter: 'final-health'
-    type: number
+}
+/**
+ * Called when a set of positions on the map is cloned.
+ */
+interface on_brush_cloned extends event {
+    /**
+     *
+     */
+    readonly source_offset: TilePosition
+    /**
+     *
+     */
+    readonly destination_offset: TilePosition
+    /**
+     *
+     */
+    readonly source_surface: LuaSurface
+    /**
+     *
+     */
+    readonly source_positions: TilePosition[]
+    /**
+     *
+     */
+    readonly destination_surface: LuaSurface
+    /**
+     * (optional)
+     */
+    readonly destination_force?: LuaForce
+    /**
+     *
+     */
+    readonly clone_tiles: boolean
+    /**
+     *
+     */
+    readonly clone_entities: boolean
+    /**
+     *
+     */
+    readonly clone_decoratives: boolean
+    /**
+     *
+     */
+    readonly clear_destination_entities: boolean
+    /**
+     *
+     */
+    readonly clear_destination_decoratives: boolean
+
+}
+/**
+ * Called when a <a href="defines.html#defines.command.build_base">defines.command.build_base</a> command reaches its destination, and before building starts.
+ */
+interface on_build_base_arrived extends event {
+    /**
+     * (optional):  The unit the command was assigned to.
+     */
+    readonly unit?: LuaEntity
+    /**
+     * (optional):  The unit group the command was assigned to.
+     */
+    readonly group?: LuaUnitGroup
+
+}
+/**
+ * Called when player builds something.
+ * Can be filtered using <a href="Event-Filters.html#LuaPlayerBuiltEntityEventFilters">LuaPlayerBuiltEntityEventFilters</a>
+ */
+interface on_built_entity extends event {
+    /**
+     *
+     */
+    readonly created_entity: LuaEntity
+    /**
+     *
+     */
+    readonly player_index: uint
+    /**
+     *
+     */
+    readonly stack: LuaItemStack
+    /**
+     * (optional):  The item prototype used to build the entity. Note this won't exist in some situations (built from blueprint, undo, etc).
+     */
+    readonly item?: LuaItemPrototype
+    /**
+     * (optional):  The tags associated with this entity if any.
+     */
+    readonly tags?: Tags
+
+}
+/**
+ * Called when the deconstruction of an entity is canceled.
+ * Can be filtered using <a href="Event-Filters.html#LuaEntityDeconstructionCancelledEventFilters">LuaEntityDeconstructionCancelledEventFilters</a>
+ */
+interface on_cancelled_deconstruction extends event {
+    /**
+     *
+     */
+    readonly entity: LuaEntity
+    /**
+     * (optional)
+     */
+    readonly player_index?: uint
+
+}
+/**
+ * Called when the upgrade of an entity is canceled.
+ * Can be filtered using <a href="Event-Filters.html#LuaUpgradeCancelledEventFilters">LuaUpgradeCancelledEventFilters</a>
+ */
+interface on_cancelled_upgrade extends event {
+    /**
+     *
+     */
+    readonly entity: LuaEntity
+    /**
+     * (optional)
+     */
+    readonly player_index?: uint
+
+}
+/**
+ * Called when a character corpse expires due to timeout or all of the items being removed from it.
+ */
+interface on_character_corpse_expired extends event {
+    /**
+     * The corpse.
+     */
+    readonly corpse: LuaEntity
+
+}
+/**
+ * Called when a chart tag is created.
+ */
+interface on_chart_tag_added extends event {
+    /**
+     *
+     */
+    readonly tag: LuaCustomChartTag
+    /**
+     *
+     */
+    readonly force: LuaForce
+    /**
+     * (optional)
+     */
+    readonly player_index?: uint
+
+}
+/**
+ * Called when a chart tag is modified by a player.
+ */
+interface on_chart_tag_modified extends event {
+    /**
+     *
+     */
+    readonly tag: LuaCustomChartTag
+    /**
+     * (optional)
+     */
+    readonly player_index?: uint
+    /**
+     *
+     */
+    readonly force: LuaForce
+    /**
+     *
+     */
+    readonly old_text: string
+    /**
+     *
+     */
+    readonly old_icon: SignalID
+    /**
+     * (optional)
+     */
+    readonly old_player_index?: uint
+
+}
+/**
+ * Called just before a chart tag is deleted.
+ */
+interface on_chart_tag_removed extends event {
+    /**
+     *
+     */
+    readonly tag: LuaCustomChartTag
+    /**
+     *
+     */
+    readonly force: LuaForce
+    /**
+     * (optional)
+     */
+    readonly player_index?: uint
+
+}
+/**
+ * Called when a chunk is charted or re-charted.
+ */
+interface on_chunk_charted extends event {
+    /**
+     *
+     */
+    readonly surface_index: uint
+    /**
+     *
+     */
+    readonly position: ChunkPosition
+    /**
+     * Area of the chunk.
+     */
+    readonly area: BoundingBox
+    /**
+     *
+     */
+    readonly force: LuaForce
+
+}
+/**
+ * Called when one or more chunks are deleted using <a href="LuaSurface.html#LuaSurface.delete_chunk">LuaSurface::delete_chunk</a>.
+ */
+interface on_chunk_deleted extends event {
+    /**
+     *
+     */
+    readonly surface_index: uint
+    /**
+     * The chunks deleted.
+     */
+    readonly positions: ChunkPosition[]
+
+}
+/**
+ * Called when a chunk is generated.
+ */
+interface on_chunk_generated extends event {
+    /**
+     * Area of the chunk.
+     */
+    readonly area: BoundingBox
+    /**
+     * Position of the chunk.
+     */
+    readonly position: ChunkPosition
+    /**
+     * The surface the chunk is on.
+     */
+    readonly surface: LuaSurface
+
+}
+/**
+ * Called when a combat robot expires through a lack of energy, or timeout.
+ */
+interface on_combat_robot_expired extends event {
+    /**
+     *
+     */
+    readonly robot: LuaEntity
+    /**
+     * (optional):  The entity that owns the robot if any.
+     */
+    readonly owner?: LuaEntity
+
+}
+/**
+ * Called when someone talks in-game either a player or through the server interface.
+ */
+interface on_console_chat extends event {
+    /**
+     * (optional):  The player if any.
+     */
+    readonly player_index?: uint
+    /**
+     * The chat message.
+     */
+    readonly message: string
+
+}
+/**
+ * Called when someone enters a command-like message regardless of it being a valid command.
+ */
+interface on_console_command extends event {
+    /**
+     * (optional):  The player if any.
+     */
+    readonly player_index?: uint
+    /**
+     * The command as typed without the preceding forward slash ('/').
+     */
+    readonly command: string
+    /**
+     * The parameters provided if any.
+     */
+    readonly parameters: string
+
+}
+/**
+ * Called when a cutscene for a player is cancelled.
+ */
+interface on_cutscene_cancelled extends event {
+    /**
+     * The player.
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called when a cutscene is playing, each time it reaches a waypoint in that cutscene.
+ */
+interface on_cutscene_waypoint_reached extends event {
+    /**
+     * The player index of the player viewing the cutscene.
+     */
+    readonly player_index: uint
+    /**
+     * The index of the waypoint we just completed.
+     */
+    readonly waypoint_index: uint
+
+}
+/**
+ * Called when the map difficulty settings are changed.
+ */
+interface on_difficulty_settings_changed extends event {
+    /**
+     *
+     */
+    readonly old_recipe_difficulty: uint
+    /**
+     *
+     */
+    readonly old_technology_difficulty: uint
+
+}
+/**
+ * Called when an entity is cloned. Can be filtered for the source entity using
+ *  <a href="Event-Filters.html#LuaEntityClonedEventFilters">LuaEntityClonedEventFilters</a>
+ */
+interface on_entity_cloned extends event {
+    /**
+     *
+     */
+    readonly source: LuaEntity
+    /**
+     *
+     */
+    readonly destination: LuaEntity
+
+}
+/**
+ * Called when an entity is damaged.
+ * Can be filtered using <a href="Event-Filters.html#LuaEntityDamagedEventFilters">LuaEntityDamagedEventFilters</a>
+ */
+interface on_entity_damaged extends event {
+    /**
+     *
+     */
+    readonly entity: LuaEntity
+    /**
+     *
+     */
+    readonly damage_type: LuaDamagePrototype
+    /**
+     * The damage amount before resistances.
+     */
+    readonly original_damage_amount: float
+    /**
+     * The damage amount after resistances.
+     */
+    readonly final_damage_amount: float
+    /**
+     * The health of the entity after the damage was applied.
+     */
+    readonly final_health: float
+    /**
+     * (optional):  The entity that did the attacking if available.
+     */
+    readonly cause?: LuaEntity
+    /**
+     * (optional):  The force that did the attacking if any.
+     */
+    readonly force?: LuaForce
+
+}
+/**
+ * Called after an entity is destroyed that has been registered with <a href="LuaBootstrap.html#LuaBootstrap.register_on_entity_destroyed">LuaBootstrap::register_on_entity_destroyed</a>
+ */
+interface on_entity_destroyed extends event {
+    /**
+     *
+     */
+    readonly registration_number: uint64
+    /**
+     * (optional)
+     */
+    readonly unit_number?: uint
+
+}
+/**
+ * Called when an entity dies.
+ * Can be filtered using <a href="Event-Filters.html#LuaEntityDiedEventFilters">LuaEntityDiedEventFilters</a>
+ */
+interface on_entity_died extends event {
+    /**
+     *
+     */
+    readonly entity: LuaEntity
+    /**
+     * (optional):  The entity that did the killing if available.
+     */
+    readonly cause?: LuaEntity
+    /**
+     * The loot generated by this entity if any.
+     */
+    readonly loot: LuaInventory
+    /**
+     * (optional):  The force that did the killing if any.
+     */
+    readonly force?: LuaForce
+    /**
+     * (optional):  The damage type if any.
+     */
+    readonly damage_type?: LuaDamagePrototype
+
+}
+/**
+ * Called after an entity has been renamed either by the player or through script.
+ */
+interface on_entity_renamed extends event {
+    /**
+     * (optional):  If by_script is true this will not be included.
+     */
+    readonly player_index?: uint
+    /**
+     *
+     */
+    readonly by_script: boolean
+    /**
+     *
+     */
+    readonly entity: LuaEntity
+    /**
+     *
+     */
+    readonly old_name: string
+
+}
+/**
+ * Called after entity copy-paste is done.
+ */
+interface on_entity_settings_pasted extends event {
+    /**
+     *
+     */
+    readonly player_index: uint
+    /**
+     * The source entity settings have been copied from.
+     */
+    readonly source: LuaEntity
+    /**
+     * The destination entity settings have been copied to.
+     */
+    readonly destination: LuaEntity
+
+}
+/**
+ * Called when an entity is spawned by a EnemySpawner
+ */
+interface on_entity_spawned extends event {
+    /**
+     *
+     */
+    readonly spawner: LuaEntity
+    /**
+     *
+     */
+    readonly entity: LuaEntity
+
+}
+/**
+ * Called when the a forces cease fire values change.
+ */
+interface on_force_cease_fire_changed extends event {
+    /**
+     * The force who's cease fire changed.
+     */
+    readonly force: LuaForce
+    /**
+     * Which force was added or removed.
+     */
+    readonly other_force: LuaForce
+    /**
+     * If the other force was added or removed.
+     */
+    readonly added: boolean
+
+}
+/**
+ * Called when a new force is created using <code>game.create_force()</code>
+ */
+interface on_force_created extends event {
+    /**
+     * The newly created force.
+     */
+    readonly force: LuaForce
+
+}
+/**
+ * Called when the a forces friends change.
+ */
+interface on_force_friends_changed extends event {
+    /**
+     * The force who's friends changed.
+     */
+    readonly force: LuaForce
+    /**
+     * Which force was added or removed.
+     */
+    readonly other_force: LuaForce
+    /**
+     * If the other force was added or removed.
+     */
+    readonly added: boolean
+
+}
+/**
+ * Called when <a href="LuaForce.html#LuaForce.reset">LuaForce::reset</a> is finished.
+ */
+interface on_force_reset extends event {
+    /**
+     *
+     */
+    readonly force: LuaForce
+
+}
+/**
+ * Called after two forces have been merged using <code>game.merge_forces()</code>.
+ */
+interface on_forces_merged extends event {
+    /**
+     * The force destroyed.
+     */
+    readonly source_name: string
+    /**
+     * The index of the destroyed force.
+     */
+    readonly source_index: uint
+    /**
+     * The force entities where reassigned to.
+     */
+    readonly destination: LuaForce
+
+}
+/**
+ * Called when two forces are about to be merged using <code>game.merge_forces()</code>.
+ */
+interface on_forces_merging extends event {
+    /**
+     * The force to be destroyed
+     */
+    readonly source: LuaForce
+    /**
+     * The force to reassign entities to.
+     */
+    readonly destination: LuaForce
+
+}
+/**
+ * Called when a game is created from a scenario.
+ */
+interface on_game_created_from_scenario extends event {
+
+}
+/**
+ * Called when <a href="LuaGuiElement.html">LuaGuiElement</a> checked state is changed (related to checkboxes and radio buttons).
+ */
+interface on_gui_checked_state_changed extends event {
+    /**
+     * The element whose checked state changed.
+     */
+    readonly element: LuaGuiElement
+    /**
+     * The player who did the change.
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called when <a href="LuaGuiElement.html">LuaGuiElement</a> is clicked.
+ */
+interface on_gui_click extends event {
+    /**
+     * The clicked element.
+     */
+    readonly element: LuaGuiElement
+    /**
+     * The player who did the clicking.
+     */
+    readonly player_index: uint
+    /**
+     * The mouse button used if any.
+     */
+    readonly button: defines.mouse_button_type
+    /**
+     * If alt was pressed.
+     */
+    readonly alt: boolean
+    /**
+     * If control was pressed.
+     */
+    readonly control: boolean
+    /**
+     * If shift was pressed.
+     */
+    readonly shift: boolean
+
+}
+/**
+ * Called when the player closes the GUI they have open.
+ */
+interface on_gui_closed extends event {
+    /**
+     * The player.
+     */
+    readonly player_index: uint
+    /**
+     * The GUI type that was open.
+     */
+    readonly gui_type: defines.gui_type
+    /**
+     * (optional):  The entity that was open
+     */
+    readonly entity?: LuaEntity
+    /**
+     * (optional):  The item that was open
+     */
+    readonly item?: LuaItemStack
+    /**
+     * (optional):  The equipment that was open
+     */
+    readonly equipment?: LuaEquipment
+    /**
+     * (optional):  The other player that was open
+     */
+    readonly other_player?: LuaPlayer
+    /**
+     * (optional):  The custom GUI element that was open
+     */
+    readonly element?: LuaGuiElement
+    /**
+     * (optional):  The technology that was automatically selected when
+     * opening the research GUI
+     */
+    readonly technology?: LuaTechnology
+    /**
+     * (optional):  The tile position that was open
+     */
+    readonly tile_position?: TilePosition
+
+}
+/**
+ * Called when a <a href="LuaGuiElement.html">LuaGuiElement</a> is confirmed,
+ *  for example by pressing Enter in a textfield.
+ */
+interface on_gui_confirmed extends event {
+    /**
+     * The confirmed element.
+     */
+    readonly element: LuaGuiElement
+    /**
+     * The player who did the confirming.
+     */
+    readonly player_index: uint
+    /**
+     * If alt was pressed.
+     */
+    readonly alt: boolean
+    /**
+     * If control was pressed.
+     */
+    readonly control: boolean
+    /**
+     * If shift was pressed.
+     */
+    readonly shift: boolean
+
+}
+/**
+ * Called when <a href="LuaGuiElement.html">LuaGuiElement</a> element
+ * value is changed (related to choose element buttons).
+ */
+interface on_gui_elem_changed extends event {
+    /**
+     * The element whose element value changed.
+     */
+    readonly element: LuaGuiElement
+    /**
+     * The player who did the change.
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called when <a href="LuaGuiElement.html">LuaGuiElement</a> element
+ * location is changed (related to frames in <code>player.gui.screen</code>).
+ */
+interface on_gui_location_changed extends event {
+    /**
+     * The element whose location changed.
+     */
+    readonly element: LuaGuiElement
+    /**
+     * The player who did the change.
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called when the player opens a GUI.
+ */
+interface on_gui_opened extends event {
+    /**
+     * The player.
+     */
+    readonly player_index: uint
+    /**
+     * The GUI type that was opened.
+     */
+    readonly gui_type: defines.gui_type
+    /**
+     * (optional):  The entity that was opened
+     */
+    readonly entity?: LuaEntity
+    /**
+     * (optional):  The item that was opened
+     */
+    readonly item?: LuaItemStack
+    /**
+     * (optional):  The equipment that was opened
+     */
+    readonly equipment?: LuaEquipment
+    /**
+     * (optional):  The other player that was opened
+     */
+    readonly other_player?: LuaPlayer
+    /**
+     * (optional):  The custom GUI element that was opened
+     */
+    readonly element?: LuaGuiElement
+
+}
+/**
+ * Called when <a href="LuaGuiElement.html">LuaGuiElement</a> selected tab is changed (related to tabbed-panes).
+ */
+interface on_gui_selected_tab_changed extends event {
+    /**
+     * The tabbed pane whose selected tab changed.
+     */
+    readonly element: LuaGuiElement
+    /**
+     * The player who did the change.
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called when <a href="LuaGuiElement.html">LuaGuiElement</a> selection state is changed (related to drop-downs and listboxes).
+ */
+interface on_gui_selection_state_changed extends event {
+    /**
+     * The element whose selection state changed.
+     */
+    readonly element: LuaGuiElement
+    /**
+     * The player who did the change.
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called when <a href="LuaGuiElement.html">LuaGuiElement</a> switch state is changed (related to switches).
+ */
+interface on_gui_switch_state_changed extends event {
+    /**
+     * The switch whose switch state changed.
+     */
+    readonly element: LuaGuiElement
+    /**
+     * The player who did the change.
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called when <a href="LuaGuiElement.html">LuaGuiElement</a> text is changed by the player.
+ */
+interface on_gui_text_changed extends event {
+    /**
+     * The edited element.
+     */
+    readonly element: LuaGuiElement
+    /**
+     * The player who did the edit.
+     */
+    readonly player_index: uint
+    /**
+     * The new text in the element.
+     */
+    readonly text: string
+
+}
+/**
+ * Called when <a href="LuaGuiElement.html">LuaGuiElement</a> slider value is changed (related to the slider element).
+ */
+interface on_gui_value_changed extends event {
+    /**
+     * The element whose value changed.
+     */
+    readonly element: LuaGuiElement
+    /**
+     * The player who did the change.
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called when a land mine is armed.
+ */
+interface on_land_mine_armed extends event {
+    /**
+     *
+     */
+    readonly mine: LuaEntity
+
+}
+/**
+ * Called when a custom Lua shortcut is pressed.
+ */
+interface on_lua_shortcut extends event {
+    /**
+     *
+     */
+    readonly player_index: uint
+    /**
+     * Shortcut prototype name of the shortcut that was clicked.
+     */
+    readonly prototype_name: string
+
+}
+/**
+ * Called when an entity is marked for deconstruction with the
+ * Deconstruction planner or via script.
+ *
+ * Can be filtered using <a
+ *  href="Event-Filters.html#LuaEntityMarkedForDeconstructionEventFilters">LuaEntityMarkedForDeconstructionEventFilters</a>
+ */
+interface on_marked_for_deconstruction extends event {
+    /**
+     *
+     */
+    readonly entity: LuaEntity
+    /**
+     * (optional)
+     */
+    readonly player_index?: uint
+
+}
+/**
+ * Called when an entity is marked for upgrade with the Upgrade planner or via script.
+ * Can be filtered using <a href="Event-Filters.html#LuaEntityMarkedForUpgradeEventFilters">LuaEntityMarkedForUpgradeEventFilters</a>
+ */
+interface on_marked_for_upgrade extends event {
+    /**
+     *
+     */
+    readonly entity: LuaEntity
+    /**
+     *
+     */
+    readonly target: LuaEntityPrototype
+    /**
+     * (optional)
+     */
+    readonly player_index?: uint
+
+}
+/**
+ * Called after a player purchases some offer from a Market entity.
+ */
+interface on_market_item_purchased extends event {
+    /**
+     * The player who did the purchasing.
+     */
+    readonly player_index: uint
+    /**
+     * The market entity.
+     */
+    readonly market: LuaEntity
+    /**
+     * The index of the offer purchased.
+     */
+    readonly offer_index: uint
+    /**
+     * The count of offers purchased.
+     */
+    readonly count: uint
+
+}
+/**
+ * Called when the player uses the &apos;Open item GUI&apos; control on an item defined with the &apos;mod-openable&apos; flag
+ */
+interface on_mod_item_opened extends event {
+    /**
+     * The player.
+     */
+    readonly player_index: uint
+    /**
+     * The item clicked on.
+     */
+    readonly item: LuaItemPrototype
+
+}
+/**
+ * Called directly after a permission group is added.
+ */
+interface on_permission_group_added extends event {
+    /**
+     * The player that added the group.
+     */
+    readonly player_index: uint
+    /**
+     * The group added.
+     */
+    readonly group: LuaPermissionGroup
+
+}
+/**
+ * Called directly after a permission group is deleted.
+ */
+interface on_permission_group_deleted extends event {
+    /**
+     * The player doing the deletion.
+     */
+    readonly player_index: uint
+    /**
+     * The group that was deleted.
+     */
+    readonly group_name: string
+    /**
+     * The group id that was deleted.
+     */
+    readonly id: uint
+
+}
+/**
+ * Called directly after a permission group is edited in some way.
+ */
+interface on_permission_group_edited extends event {
+    /**
+     * The player that did the editing.
+     */
+    readonly player_index: uint
+    /**
+     * The group being edited.
+     */
+    readonly group: LuaPermissionGroup
+    /**
+     * The edit type: add-permission, remove-permission, enable-all, disable-all, add-player, remove-player, rename.
+     */
+    readonly type: string
+    /**
+     * action:  The defines.input_action when the type is add-permission or remove-permission.
+     */
+    readonly action: any
+    /**
+     * The other player when the type is add-player or remove-player.
+     */
+    readonly other_player_index: uint
+    /**
+     * The old group name when the type is rename.
+     */
+    readonly old_name: string
+    /**
+     * The new group name when the type is rename.
+     */
+    readonly new_name: string
+
+}
+/**
+ * Called directly after a permission string is imported.
+ */
+interface on_permission_string_imported extends event {
+    /**
+     * The player that imported the string.
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called when a player picks up an item.
+ */
+interface on_picked_up_item extends event {
+    /**
+     *
+     */
+    readonly item_stack: SimpleItemStack
+    /**
+     *
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called after a player alt-selects an area with a selection-tool item.
+ */
+interface on_player_alt_selected_area extends event {
+    /**
+     * The player doing the selection.
+     */
+    readonly player_index: uint
+    /**
+     * The surface selected.
+     */
+    readonly surface: LuaSurface
+    /**
+     * The area selected.
+     */
+    readonly area: BoundingBox
+    /**
+     * The item used to select the area.
+     */
+    readonly item: string
+    /**
+     * The entities selected.
+     */
+    readonly entities: LuaEntity[]
+    /**
+     * The tiles selected.
+     */
+    readonly tiles: LuaTile[]
+
+}
+/**
+ * Called after a players ammo inventory changed in some way.
+ */
+interface on_player_ammo_inventory_changed extends event {
+    /**
+     *
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called after a players armor inventory changed in some way.
+ */
+interface on_player_armor_inventory_changed extends event {
+    /**
+     *
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called when a player is banned.
+ */
+interface on_player_banned extends event {
+    /**
+     * (optional):  The player banned.
+     */
+    readonly player_index?: uint
+    /**
+     * The banned player name.
+     */
+    readonly player_name: string
+    /**
+     * (optional):  The player that did the banning if any.
+     */
+    readonly by_player?: uint
+    /**
+     * (optional):  The reason given if any.
+     */
+    readonly reason?: string
+
+}
+/**
+ * Called after a player builds tiles.
+ */
+interface on_player_built_tile extends event {
+    /**
+     *
+     */
+    readonly player_index: uint
+    /**
+     * The surface the tile(s) were built on.
+     */
+    readonly surface_index: uint
+    /**
+     * The position data.
+     */
+    readonly tiles: OldTileAndPosition[]
+    /**
+     * The tile prototype that was placed.
+     */
+    readonly tile: LuaTilePrototype
+    /**
+     * (optional):  The item type used to build the tiles
+     */
+    readonly item?: LuaItemPrototype
+    /**
+     * (optional):  The stack used to build the tiles (may be empty if all of the items where used to build the tiles).
+     */
+    readonly stack?: LuaItemStack
+
+}
+/**
+ * Called when a player cancels crafting.
+ */
+interface on_player_cancelled_crafting extends event {
+    /**
+     *
+     */
+    readonly player_index: uint
+    /**
+     *
+     */
+    readonly items: LuaInventory
+    /**
+     *
+     */
+    readonly recipe: LuaRecipe
+    /**
+     *
+     */
+    readonly cancel_count: uint
+
+}
+/**
+ * Called after a player changes forces.
+ */
+interface on_player_changed_force extends event {
+    /**
+     * The player who changed forces.
+     */
+    readonly player_index: uint
+    /**
+     * The old force.
+     */
+    readonly force: LuaForce
+
+}
+/**
+ * Called when the tile position a player is located at changes.
+ */
+interface on_player_changed_position extends event {
+    /**
+     * The player.
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called after a player changes surfaces.
+ */
+interface on_player_changed_surface extends event {
+    /**
+     * The player who changed surfaces.
+     */
+    readonly player_index: uint
+    /**
+     * The surface index the player was on.
+     */
+    readonly surface_index: uint
+
+}
+/**
+ * Called when cheat mode is disabled on a player.
+ */
+interface on_player_cheat_mode_disabled extends event {
+    /**
+     * The player.
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called when cheat mode is enabled on a player.
+ */
+interface on_player_cheat_mode_enabled extends event {
+    /**
+     * The player.
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called when a player clicks a gps tag
+ */
+interface on_player_clicked_gps_tag extends event {
+    /**
+     * Index of the player
+     */
+    readonly player_index: uint
+    /**
+     * Map position contained in gps tag
+     */
+    readonly position: Position
+    /**
+     * Surface name contained in gps tag, even when such surface does not exists
+     */
+    readonly surface: string
+
+}
+/**
+ * Called when a player clicks the &quot;confirm&quot; button in the configure Blueprint GUI.
+ */
+interface on_player_configured_blueprint extends event {
+    /**
+     * The player.
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called when a player configures spidertron remote to be connected with a given spidertron
+ */
+interface on_player_configured_spider_remote extends event {
+    /**
+     * The player that configured the remote.
+     */
+    readonly player_index: uint
+    /**
+     * Spider vehicle to which remote was connected to.
+     */
+    readonly vehicle: LuaEntity
+
+}
+/**
+ * Called when the player crafts an item (just before inserting into player&apos;s inventory, not clicking
+ * the button to craft). It is called for each item crafted as well as what was clicked.
+ */
+interface on_player_crafted_item extends event {
+    /**
+     * The crafted item
+     */
+    readonly item_stack: LuaItemStack
+    /**
+     * The player who did the crafting
+     */
+    readonly player_index: uint
+    /**
+     * The recipe that resulted in this item being crafted
+     */
+    readonly recipe: LuaRecipe
+
+}
+/**
+ * Called after the player was created.
+ */
+interface on_player_created extends event {
+    /**
+     *
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called after a players cursorstack changed in some way.
+ */
+interface on_player_cursor_stack_changed extends event {
+    /**
+     *
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called when a player selects an area with a deconstruction planner.
+ */
+interface on_player_deconstructed_area extends event {
+    /**
+     * The player doing the selection.
+     */
+    readonly player_index: uint
+    /**
+     * The surface selected.
+     */
+    readonly surface: LuaSurface
+    /**
+     * The area selected.
+     */
+    readonly area: BoundingBox
+    /**
+     * The item used to select the area.
+     */
+    readonly item: string
+    /**
+     * If normal selection or alt selection was used.
+     */
+    readonly alt: boolean
+
+}
+/**
+ * Called when a player is demoted.
+ */
+interface on_player_demoted extends event {
+    /**
+     * The player.
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called after a player dies.
+ */
+interface on_player_died extends event {
+    /**
+     *
+     */
+    readonly player_index: uint
+    /**
+     * (optional)
+     */
+    readonly cause?: LuaEntity
+
+}
+/**
+ * Called when the display resolution changes for a given player.
+ */
+interface on_player_display_resolution_changed extends event {
+    /**
+     * The player
+     */
+    readonly player_index: uint
+    /**
+     * The old display resolution
+     */
+    readonly old_resolution: DisplayResolution
+
+}
+/**
+ * Called when the display scale changes for a given player.
+ */
+interface on_player_display_scale_changed extends event {
+    /**
+     * The player
+     */
+    readonly player_index: uint
+    /**
+     * The old display scale
+     */
+    readonly old_scale: double
+
+}
+/**
+ * Called when the player&apos;s driving state has changed, this means a player has either
+ * entered or left a vehicle.
+ */
+interface on_player_driving_changed_state extends event {
+    /**
+     *
+     */
+    readonly player_index: uint
+    /**
+     * (optional):  The vehicle if any.
+     */
+    readonly entity?: LuaEntity
+
+}
+/**
+ * Called when a player drops an item on the ground.
+ */
+interface on_player_dropped_item extends event {
+    /**
+     *
+     */
+    readonly player_index: uint
+    /**
+     * The item-on-ground entity.
+     */
+    readonly entity: LuaEntity
+
+}
+/**
+ * Called when a player fast-transfers something to or from an entity.
+ */
+interface on_player_fast_transferred extends event {
+    /**
+     *
+     */
+    readonly player_index: uint
+    /**
+     *
+     */
+    readonly entity: LuaEntity
+    /**
+     * If the transfer was from player to entity or entity to player.
+     */
+    readonly from_player: boolean
+
+}
+/**
+ * Called after player flushed fluid
+ */
+interface on_player_flushed_fluid extends event {
+    /**
+     * Index of the player
+     */
+    readonly player_index: uint
+    /**
+     * Name of a fluid that was flushed
+     */
+    readonly fluid: string
+    /**
+     * Amount of fluid that was removed
+     */
+    readonly amount: double
+    /**
+     * Entity from which flush was performed
+     */
+    readonly entity: LuaEntity
+    /**
+     * True if flush was requested only on this entity
+     */
+    readonly only_this_entity: boolean
+
+}
+/**
+ * Called after a players gun inventory changed in some way.
+ */
+interface on_player_gun_inventory_changed extends event {
+    /**
+     *
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called after a player joins the game.
+ */
+interface on_player_joined_game extends event {
+    /**
+     *
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called when a player is kicked.
+ */
+interface on_player_kicked extends event {
+    /**
+     * The player kicked.
+     */
+    readonly player_index: uint
+    /**
+     * (optional):  The player that did the kicking if any.
+     */
+    readonly by_player?: uint
+    /**
+     * (optional):  The reason given if any.
+     */
+    readonly reason?: string
+
+}
+/**
+ * Called after a player leaves the game.
+ */
+interface on_player_left_game extends event {
+    /**
+     *
+     */
+    readonly player_index: uint
+    /**
+     *
+     */
+    readonly reason: defines.disconnect_reason
+
+}
+/**
+ * Called after a players main inventory changed in some way.
+ */
+interface on_player_main_inventory_changed extends event {
+    /**
+     *
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called after the results of an entity being mined are collected just before the entity is destroyed.
+ * After this event any items in the buffer will be transferred into the player as if they came from mining the entity.
+ * Can be filtered using <a href="Event-Filters.html#LuaPlayerMinedEntityEventFilters">LuaPlayerMinedEntityEventFilters</a>
+ */
+interface on_player_mined_entity extends event {
+    /**
+     * The index of the player doing the mining.
+     */
+    readonly player_index: uint
+    /**
+     * The entity that has been mined.
+     */
+    readonly entity: LuaEntity
+    /**
+     * The temporary inventory that holds the result of mining the entity.
+     */
+    readonly buffer: LuaInventory
+
+}
+/**
+ * Called when the player mines something.
+ */
+interface on_player_mined_item extends event {
+    /**
+     * The item given to the player
+     */
+    readonly item_stack: SimpleItemStack
+    /**
+     *
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called after a player mines tiles.
+ */
+interface on_player_mined_tile extends event {
+    /**
+     *
+     */
+    readonly player_index: uint
+    /**
+     * The surface the tile(s) were mined from.
+     */
+    readonly surface_index: uint
+    /**
+     * The position data.
+     */
+    readonly tiles: OldTileAndPosition[]
+
+}
+/**
+ * Called when a player is muted.
+ */
+interface on_player_muted extends event {
+    /**
+     * The player.
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called when a player invokes the &quot;smart pipette&quot; over an entity.
+ */
+interface on_player_pipette extends event {
+    /**
+     * The player
+     */
+    readonly player_index: uint
+    /**
+     * The item put in the cursor
+     */
+    readonly item: LuaItemPrototype
+    /**
+     * If cheat mode was used to give a free stack of the item.
+     */
+    readonly used_cheat_mode: boolean
+
+}
+/**
+ * Called after the player puts equipment in an equipment grid
+ */
+interface on_player_placed_equipment extends event {
+    /**
+     *
+     */
+    readonly player_index: uint
+    /**
+     * The equipment put in the equipment grid.
+     */
+    readonly equipment: LuaEquipment
+    /**
+     * The equipment grid the equipment was put in.
+     */
+    readonly grid: LuaEquipmentGrid
+
+}
+/**
+ * Called when a player is promoted.
+ */
+interface on_player_promoted extends event {
+    /**
+     * The player.
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called when a player is removed (deleted) from the game.
+ * Not to be confused with the player logging of this is different in that the player is deleted as if he never existed in the save file.
+ */
+interface on_player_removed extends event {
+    /**
+     * The player index that was removed
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called after the player removes equipment from an equipment grid
+ */
+interface on_player_removed_equipment extends event {
+    /**
+     *
+     */
+    readonly player_index: uint
+    /**
+     * The equipment grid removed from.
+     */
+    readonly grid: LuaEquipmentGrid
+    /**
+     * The equipment removed.
+     */
+    readonly equipment: string
+    /**
+     * The count of equipment removed.
+     */
+    readonly count: uint
+
+}
+/**
+ * Called when a player repairs an entity.
+ * Can be filtered using <a href="Event-Filters.html#LuaPlayerRepairedEntityEventFilters">LuaPlayerRepairedEntityEventFilters</a>
+ */
+interface on_player_repaired_entity extends event {
+    /**
+     *
+     */
+    readonly player_index: uint
+    /**
+     *
+     */
+    readonly entity: LuaEntity
+
+}
+/**
+ * Called after a player respawns.
+ */
+interface on_player_respawned extends event {
+    /**
+     *
+     */
+    readonly player_index: uint
+    /**
+     * (optional):  The player port used to respawn if one was used.
+     */
+    readonly player_port?: LuaEntity
+
+}
+/**
+ * Called when the player rotates an entity. This event is only fired when the entity actually changes its
+ * orientation -- pressing the rotate key on an entity that can&apos;t be rotated won&apos;t fire this event.
+ */
+interface on_player_rotated_entity extends event {
+    /**
+     * The rotated entity.
+     */
+    readonly entity: LuaEntity
+    /**
+     * The previous direction
+     */
+    readonly previous_direction: defines.direction
+    /**
+     *
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called after a player selects an area with a selection-tool item.
+ */
+interface on_player_selected_area extends event {
+    /**
+     * The player doing the selection.
+     */
+    readonly player_index: uint
+    /**
+     * The surface selected.
+     */
+    readonly surface: LuaSurface
+    /**
+     * The area selected.
+     */
+    readonly area: BoundingBox
+    /**
+     * The item used to select the area.
+     */
+    readonly item: string
+    /**
+     * The entities selected.
+     */
+    readonly entities: LuaEntity[]
+    /**
+     * The tiles selected.
+     */
+    readonly tiles: LuaTile[]
+
+}
+/**
+ * Called when a player sets a quickbar slot to anything (new value, or set to empty).
+ */
+interface on_player_set_quick_bar_slot extends event {
+    /**
+     *
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called when a player selects an area with a blueprint.
+ */
+interface on_player_setup_blueprint extends event {
+    /**
+     * The player doing the selection.
+     */
+    readonly player_index: uint
+    /**
+     * The surface selected.
+     */
+    readonly surface: LuaSurface
+    /**
+     * The area selected.
+     */
+    readonly area: BoundingBox
+    /**
+     * The item used to select the area.
+     */
+    readonly item: string
+    /**
+     * If normal selection or alt selection was used.
+     */
+    readonly alt: boolean
+    /**
+     * The blueprint entity index to source entity mapping. Note: if any mod changes the blueprint this will be incorrect.
+     */
+    readonly mapping: {
+        [key: number]: LuaEntity,
+    }
+
+}
+/**
+ * Called when a player toggles alt mode, also known as &quot;show entity info&quot;.
+ */
+interface on_player_toggled_alt_mode extends event {
+    /**
+     *
+     */
+    readonly player_index: uint
+    /**
+     * The new alt mode value. This value is a shortcut for accessing GameViewSettings::show_entity_info on the player.
+     */
+    readonly alt_mode: boolean
+
+}
+/**
+ * Called when a player toggles the map editor on or off.
+ */
+interface on_player_toggled_map_editor extends event {
+    /**
+     *
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called after a players trash inventory changed in some way.
+ */
+interface on_player_trash_inventory_changed extends event {
+    /**
+     *
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called when a player is un-banned.
+ */
+interface on_player_unbanned extends event {
+    /**
+     * (optional):  The player un-banned.
+     */
+    readonly player_index?: uint
+    /**
+     * The player name un-banned.
+     */
+    readonly player_name: string
+    /**
+     * (optional):  The player that did the un-banning if any.
+     */
+    readonly by_player?: uint
+    /**
+     * (optional):  The reason the player was banned if any.
+     */
+    readonly reason?: string
+
+}
+/**
+ * Called when a player is unmuted.
+ */
+interface on_player_unmuted extends event {
+    /**
+     * The player.
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called when a player uses a capsule that results in some game action.
+ */
+interface on_player_used_capsule extends event {
+    /**
+     * The player.
+     */
+    readonly player_index: uint
+    /**
+     * The capsule item used.
+     */
+    readonly item: LuaItemPrototype
+    /**
+     * The position the capsule was used.
+     */
+    readonly position: Position
+
+}
+/**
+ * Called when a player uses spidertron remote to send a spidertron to a given position
+ */
+interface on_player_used_spider_remote extends event {
+    /**
+     * The player that used the remote.
+     */
+    readonly player_index: uint
+    /**
+     * Spider vehicle which was requested to move.
+     */
+    readonly vehicle: LuaEntity
+    /**
+     * Goal position to which spidertron was sent to.
+     */
+    readonly position: Position
+    /**
+     * If the use was successful. It may fail when spidertron has different driver or when player is on different surface.
+     */
+    readonly success: boolean
+
+}
+/**
+ * Called after an entity dies.
+ * Can be filtered using <a href="Event-Filters.html#LuaPostEntityDiedEventFilters">LuaPostEntityDiedEventFilters</a>
+ */
+interface on_post_entity_died extends event {
+    /**
+     * (optional):  The ghost created by the entity dying if any.
+     */
+    readonly ghost?: LuaEntity
+    /**
+     * (optional):  The force that did the killing if any.
+     */
+    readonly force?: LuaForce
+    /**
+     * Position where the entity died.
+     */
+    readonly position: Position
+    /**
+     * The entity prototype of the entity that died.
+     */
+    readonly prototype: LuaEntityPrototype
+    /**
+     * (optional):  The damage type if any.
+     */
+    readonly damage_type?: LuaDamagePrototype
+    /**
+     * The corpses created by the entity dying if any.
+     */
+    readonly corpses: LuaEntity[]
+    /**
+     * The surface the entity was on.
+     */
+    readonly surface_index: uint
+    /**
+     * (optional):  The unit number the entity had if any.
+     */
+    readonly unit_number?: uint
+
+}
+/**
+ * Called when players uses an item to build something. Called before <a href="events.html#on_built_entity">on_built_entity</a>.
+ */
+interface on_pre_build extends event {
+    /**
+     * The player who did the placing.
+     */
+    readonly player_index: uint
+    /**
+     * Where the item was placed.
+     */
+    readonly position: Position
+    /**
+     * Item was placed using shift building.
+     */
+    readonly shift_build: boolean
+    /**
+     * The direction the item was facing when placed.
+     */
+    readonly direction: defines.direction
+    /**
+     * If building this blueprint was flipped horizontally.
+     */
+    readonly flip_horizontal: boolean
+    /**
+     * If building this blueprint was flipped vertically.
+     */
+    readonly flip_vertical: boolean
+    /**
+     * Item was placed while moving.
+     */
+    readonly created_by_moving: boolean
+
+}
+/**
+ * Called before one or more chunks are deleted using <a href="LuaSurface.html#LuaSurface.delete_chunk">LuaSurface::delete_chunk</a>.
+ */
+interface on_pre_chunk_deleted extends event {
+    /**
+     *
+     */
+    readonly surface_index: uint
+    /**
+     * The chunks to be deleted.
+     */
+    readonly positions: ChunkPosition[]
+
+}
+/**
+ * Called before entity copy-paste is done.
+ */
+interface on_pre_entity_settings_pasted extends event {
+    /**
+     *
+     */
+    readonly player_index: uint
+    /**
+     * The source entity settings will be copied from.
+     */
+    readonly source: LuaEntity
+    /**
+     * The destination entity settings will be copied to.
+     */
+    readonly destination: LuaEntity
+
+}
+/**
+ * Called before a ghost entity is destroyed as a result of being marked for deconstruction.
+ * Can be filtered using <a href="Event-Filters.html#LuaPreGhostDeconstructedEventFilters">LuaPreGhostDeconstructedEventFilters</a>
+ */
+interface on_pre_ghost_deconstructed extends event {
+    /**
+     * (optional):  The player that did the deconstruction if any.
+     */
+    readonly player_index?: uint
+    /**
+     *
+     */
+    readonly ghost: LuaEntity
+
+}
+/**
+ * Called directly before a permission group is deleted.
+ */
+interface on_pre_permission_group_deleted extends event {
+    /**
+     * The player doing the deletion.
+     */
+    readonly player_index: uint
+    /**
+     * The group to be deleted.
+     */
+    readonly group: LuaPermissionGroup
+
+}
+/**
+ * Called directly before a permission string is imported.
+ */
+interface on_pre_permission_string_imported extends event {
+    /**
+     * The player importing the string.
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called when a player queues something to be crafted.
+ */
+interface on_pre_player_crafted_item extends event {
+    /**
+     * The player.
+     */
+    readonly player_index: uint
+    /**
+     * The recipe.
+     */
+    readonly recipe: LuaRecipe
+    /**
+     * The items removed from the players inventory to do the crafting.
+     */
+    readonly items: LuaInventory
+    /**
+     * The number of recipes queued.
+     */
+    readonly queued_count: uint
+
+}
+/**
+ * Called before a players dies.
+ */
+interface on_pre_player_died extends event {
+    /**
+     *
+     */
+    readonly player_index: uint
+    /**
+     * (optional)
+     */
+    readonly cause?: LuaEntity
+
+}
+/**
+ * Called before a player leaves the game.
+ */
+interface on_pre_player_left_game extends event {
+    /**
+     *
+     */
+    readonly player_index: uint
+    /**
+     *
+     */
+    readonly reason: defines.disconnect_reason
+
+}
+/**
+ * Called when the player finishes mining an entity, before the entity is removed from map.
+ * Can be filtered using <a href="Event-Filters.html#LuaPrePlayerMinedEntityEventFilters">LuaPrePlayerMinedEntityEventFilters</a>
+ */
+interface on_pre_player_mined_item extends event {
+    /**
+     * The entity being mined
+     */
+    readonly entity: LuaEntity
+    /**
+     *
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called before a player is removed (deleted) from the game.
+ * Not to be confused with the player logging of this is different in that the player is deleted as if he never existed in the save file.
+ */
+interface on_pre_player_removed extends event {
+    /**
+     * The player index that will be removed
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called before a player toggles the map editor on or off.
+ */
+interface on_pre_player_toggled_map_editor extends event {
+    /**
+     *
+     */
+    readonly player_index: uint
+
+}
+/**
+ * Called directly before a robot explodes cliffs.
+ */
+interface on_pre_robot_exploded_cliff extends event {
+    /**
+     *
+     */
+    readonly robot: LuaEntity
+    /**
+     *
+     */
+    readonly cliff: LuaEntity
+    /**
+     * The cliff explosive used.
+     */
+    readonly item: LuaItemPrototype
+
+}
+/**
+ * Called just before a script inventory is resized.
+ */
+interface on_pre_script_inventory_resized extends event {
+    /**
+     * (optional):  If done by console command; the player who ran the command.
+     */
+    readonly player_index?: uint
+    /**
+     * The mod that did the resizing. This will be "core" if done by console command or scenario script.
+     */
+    readonly mod: string
+    /**
+     *
+     */
+    readonly inventory: LuaInventory
+    /**
+     * The old inventory size.
+     */
+    readonly old_size: uint
+    /**
+     * The new inventory size.
+     */
+    readonly new_size: uint
+
+}
+/**
+ * Called just before a surface is cleared (all entities removed and all chunks deleted).
+ */
+interface on_pre_surface_cleared extends event {
+    /**
+     *
+     */
+    readonly surface_index: uint
+
+}
+/**
+ * Called just before a surface is deleted.
+ */
+interface on_pre_surface_deleted extends event {
+    /**
+     *
+     */
+    readonly surface_index: uint
+
+}
+/**
+ * Called when a research finishes.
+ */
+interface on_research_finished extends event {
+    /**
+     * The researched technology
+     */
+    readonly research: LuaTechnology
+    /**
+     * If the technology was researched by script.
+     */
+    readonly by_script: boolean
+
+}
+/**
+ * Called when a technology research starts.
+ */
+interface on_research_started extends event {
+    /**
+     * The technology being researched
+     */
+    readonly research: LuaTechnology
+    /**
+     * (optional)
+     */
+    readonly last_research?: LuaTechnology
+
+}
+/**
+ * Called when a resource entity reaches 0 or its minimum yield for infinite resources.
+ */
+interface on_resource_depleted extends event {
+    /**
+     *
+     */
+    readonly entity: LuaEntity
+
+}
+/**
+ * Called when a construction robot builds an entity.
+ * Can be filtered using <a href="Event-Filters.html#LuaRobotBuiltEntityEventFilters">LuaRobotBuiltEntityEventFilters</a>
+ */
+interface on_robot_built_entity extends event {
+    /**
+     * The robot that did the building.
+     */
+    readonly robot: LuaEntity
+    /**
+     * The entity built.
+     */
+    readonly created_entity: LuaEntity
+    /**
+     * The item used to do the building.
+     */
+    readonly stack: LuaItemStack
+    /**
+     * (optional):  The tags associated with this entity if any.
+     */
+    readonly tags?: Tags
+
+}
+/**
+ * Called after a robot builds tiles.
+ */
+interface on_robot_built_tile extends event {
+    /**
+     * The robot.
+     */
+    readonly robot: LuaEntity
+    /**
+     * The position data.
+     */
+    readonly tiles: OldTileAndPosition[]
+    /**
+     * The tile prototype that was placed.
+     */
+    readonly tile: LuaTilePrototype
+    /**
+     * The item type used to build the tiles.
+     */
+    readonly item: LuaItemPrototype
+    /**
+     * The stack used to build the tiles (may be empty if all of the items where used to build the tiles).
+     */
+    readonly stack: LuaItemStack
+    /**
+     * The surface the tile(s) are build on.
+     */
+    readonly surface_index: uint
+
+}
+/**
+ * Called directly after a robot explodes cliffs.
+ */
+interface on_robot_exploded_cliff extends event {
+    /**
+     *
+     */
+    readonly robot: LuaEntity
+    /**
+     * The cliff explosive used.
+     */
+    readonly item: LuaItemPrototype
+
+}
+/**
+ * Called when a robot mines an entity.
+ */
+interface on_robot_mined extends event {
+    /**
+     * The robot that did the mining.
+     */
+    readonly robot: LuaEntity
+    /**
+     * The entity the robot just picked up.
+     */
+    readonly item_stack: SimpleItemStack
+
+}
+/**
+ * Called after the results of an entity being mined are collected just before the entity is destroyed.
+ * After this event any items in the buffer will be transferred into the robot as if they came from mining the entity.
+ * Can be filtered using <a href="Event-Filters.html#LuaRobotMinedEntityEventFilters">LuaRobotMinedEntityEventFilters</a>
+ */
+interface on_robot_mined_entity extends event {
+    /**
+     * The robot doing the mining.
+     */
+    readonly robot: LuaEntity
+    /**
+     * The entity that has been mined.
+     */
+    readonly entity: LuaEntity
+    /**
+     * The temporary inventory that holds the result of mining the entity.
+     */
+    readonly buffer: LuaInventory
+
+}
+/**
+ * Called after a robot mines tiles.
+ */
+interface on_robot_mined_tile extends event {
+    /**
+     * The robot.
+     */
+    readonly robot: LuaEntity
+    /**
+     * The position data.
+     */
+    readonly tiles: OldTileAndPosition[]
+    /**
+     * The surface the tile(s) were mined on.
+     */
+    readonly surface_index: uint
+
+}
+/**
+ * Called before a robot mines an entity.
+ * Can be filtered using <a href="Event-Filters.html#LuaPreRobotMinedEntityEventFilters">LuaPreRobotMinedEntityEventFilters</a>
+ */
+interface on_robot_pre_mined extends event {
+    /**
+     * The robot that's about to do the mining.
+     */
+    readonly robot: LuaEntity
+    /**
+     * The entity which is about to be mined.
+     */
+    readonly entity: LuaEntity
+
+}
+/**
+ * Called when a rocket silo is ordered to be launched.
+ */
+interface on_rocket_launch_ordered extends event {
+    /**
+     *
+     */
+    readonly rocket: LuaEntity
+    /**
+     *
+     */
+    readonly rocket_silo: LuaEntity
+    /**
+     * (optional):  The player that is riding the rocket, if any.
+     */
+    readonly player_index?: uint
+
+}
+/**
+ * Called when the rocket is launched.
+ */
+interface on_rocket_launched extends event {
+    /**
+     *
+     */
+    readonly rocket: LuaEntity
+    /**
+     * (optional)
+     */
+    readonly rocket_silo?: LuaEntity
+    /**
+     * (optional):  The player that is riding the rocket, if any.
+     */
+    readonly player_index?: uint
+
+}
+/**
+ * Called when a runtime mod setting is changed by a player.
+ */
+interface on_runtime_mod_setting_changed extends event {
+    /**
+     * (optional):  The player who changed the setting or nil if changed by script.
+     */
+    readonly player_index?: uint
+    /**
+     * The setting name that changed.
+     */
+    readonly setting: string
+    /**
+     * The setting type: "runtime-per-user", or "runtime-global".
+     */
+    readonly setting_type: string
+
+}
+/**
+ * Called just after a script inventory is resized.
+ */
+interface on_script_inventory_resized extends event {
+    /**
+     * (optional):  If done by console command; the player who ran the command.
+     */
+    readonly player_index?: uint
+    /**
+     * The mod that did the resizing. This will be "core" if done by console command or scenario script.
+     */
+    readonly mod: string
+    /**
+     *
+     */
+    readonly inventory: LuaInventory
+    /**
+     * The old inventory size.
+     */
+    readonly old_size: uint
+    /**
+     * The new inventory size.
+     */
+    readonly new_size: uint
+    /**
+     * Any items which didn't fit into the new inventory size.
+     */
+    readonly overflow_inventory: LuaInventory
+
+}
+/**
+ * Called when a script path request completes. <a href="LuaSurface.html#LuaSurface.request_path">LuaSurface::request_path</a>
+ */
+interface on_script_path_request_finished extends event {
+    /**
+     * (optional)
+     */
+    readonly path?: Array<{
+        position: Position,
+        needs_destroy_to_reach: boolean
+    }>
+    /**
+     * Handle to associate the callback with a particular call to LuaSurface::request_path.
+     */
+    readonly id: uint
+    /**
+     * Indicates that the pathfinder failed because it is too busy, and you can retry later.
+     */
+    readonly try_again_later: boolean
+
+}
+/**
+ * Called when a script trigger effect is triggered.
+ */
+interface on_script_trigger_effect extends event {
+    /**
+     * The effect_id specified in the trigger effect.
+     */
+    readonly effect_id: string
+    /**
+     * The surface the effect happened on.
+     */
+    readonly surface_index: uint
+    /**
+     * (optional)
+     */
+    readonly source_position?: Position
+    /**
+     * (optional)
+     */
+    readonly source_entity?: LuaEntity
+    /**
+     * (optional)
+     */
+    readonly target_position?: Position
+    /**
+     * (optional)
+     */
+    readonly target_entity?: LuaEntity
+
+}
+/**
+ * Called when the radar finishes scanning a sector.
+ * Can be filtered for the radar using <a href="Event-Filters.html#LuaSectorScannedEventFilters">LuaSectorScannedEventFilters</a>
+ */
+interface on_sector_scanned extends event {
+    /**
+     * The radar that did the scanning.
+     */
+    readonly radar: LuaEntity
+    /**
+     * The chunk scanned.
+     */
+    readonly chunk_position: ChunkPosition
+    /**
+     * Area of the scanned chunk.
+     */
+    readonly area: BoundingBox
+
+}
+/**
+ * Called after the selected entity changes for a given player.
+ */
+interface on_selected_entity_changed extends event {
+    /**
+     * The player whose selected entity changed.
+     */
+    readonly player_index: uint
+    /**
+     * (optional):  The last selected entity if it still exists and there was one.
+     */
+    readonly last_entity?: LuaEntity
+
+}
+/**
+ * Called when a spider finishes moving to its autopilot position.
+ */
+interface on_spider_command_completed extends event {
+    /**
+     * Spider vehicle which was requested to move.
+     */
+    readonly vehicle: LuaEntity
+
+}
+/**
+ * Called when a translation request generated through
+ * <a href="LuaPlayer.html#LuaPlayer.request_translation">LuaPlayer::request_translation</a> is translated.
+ */
+interface on_string_translated extends event {
+    /**
+     *
+     */
+    readonly player_index: uint
+    /**
+     *
+     */
+    readonly localised_string: LocalisedString
+    /**
+     *
+     */
+    readonly result: string
+    /**
+     *
+     */
+    readonly translated: boolean
+
+}
+/**
+ * Called just after a surface is cleared (all entities removed and all chunks deleted).
+ */
+interface on_surface_cleared extends event {
+    /**
+     *
+     */
+    readonly surface_index: uint
+
+}
+/**
+ * Called when a surface is created.
+ */
+interface on_surface_created extends event {
+    /**
+     *
+     */
+    readonly surface_index: uint
+
+}
+/**
+ * Called after a surface is deleted.
+ */
+interface on_surface_deleted extends event {
+    /**
+     *
+     */
+    readonly surface_index: uint
+
+}
+/**
+ * Called after a surface is imported.
+ */
+interface on_surface_imported extends event {
+    /**
+     *
+     */
+    readonly surface_index: uint
+    /**
+     * The original surface name.
+     */
+    readonly original_name: string
+
+}
+/**
+ * Called when a surface is renamed.
+ */
+interface on_surface_renamed extends event {
+    /**
+     *
+     */
+    readonly surface_index: uint
+    /**
+     *
+     */
+    readonly old_name: string
+    /**
+     *
+     */
+    readonly new_name: string
+
+}
+/**
+ * Called when <a href="LuaForce.html#LuaForce.reset_technology_effects">LuaForce::reset_technology_effects</a> is finished.
+ */
+interface on_technology_effects_reset extends event {
+    /**
+     *
+     */
+    readonly force: LuaForce
+
+}
+/**
+ * Called when a train changes state (started to stopped and vice versa)
+ */
+interface on_train_changed_state extends event {
+    /**
+     *
+     */
+    readonly train: LuaTrain
+    /**
+     *
+     */
+    readonly old_state: defines.train_state
+
+}
+/**
+ * Called when a new train is created either through disconnecting/connecting an existing one or building a new one.
+ */
+interface on_train_created extends event {
+    /**
+     *
+     */
+    readonly train: LuaTrain
+    /**
+     * (optional):  The first old train id when splitting/merging trains.
+     */
+    readonly old_train_id_1?: uint
+    /**
+     * (optional):  The second old train id when splitting/merging trains.
+     */
+    readonly old_train_id_2?: uint
+
+}
+/**
+ * Called when a trains schedule is changed either by the player or through script.
+ */
+interface on_train_schedule_changed extends event {
+    /**
+     *
+     */
+    readonly train: LuaTrain
+    /**
+     * (optional):  The player who made the change if any.
+     */
+    readonly player_index?: uint
+
+}
+/**
+ * Called when an entity with a trigger prototype (such as capsules) create an entity AND that
+ * trigger prototype defined <code>trigger_created_entity=&quot;true&quot;</code>.
+ */
+interface on_trigger_created_entity extends event {
+    /**
+     *
+     */
+    readonly entity: LuaEntity
+    /**
+     * (optional)
+     */
+    readonly source?: LuaEntity
+
+}
+/**
+ * Called when an entity with a trigger prototype (such as capsules) fire an artillery projectile AND that
+ *  trigger prototype defined <code>trigger_fired_artillery=&quot;true&quot;</code>.
+ */
+interface on_trigger_fired_artillery extends event {
+    /**
+     *
+     */
+    readonly entity: LuaEntity
+    /**
+     * (optional)
+     */
+    readonly source?: LuaEntity
+
+}
+/**
+ * Called when a unit is added to a unit group.
+ */
+interface on_unit_added_to_group extends event {
+    /**
+     *
+     */
+    readonly unit: LuaEntity
+    /**
+     *
+     */
+    readonly group: LuaUnitGroup
+
+}
+/**
+ * Called when a new unit group is created, before any members are added to it.
+ */
+interface on_unit_group_created extends event {
+    /**
+     *
+     */
+    readonly group: LuaUnitGroup
+
+}
+/**
+ * Called when a unit group finishes gathering and starts executing its command.
+ */
+interface on_unit_group_finished_gathering extends event {
+    /**
+     *
+     */
+    readonly group: LuaUnitGroup
+
+}
+/**
+ * Called when a unit is removed from a unit group.
+ */
+interface on_unit_removed_from_group extends event {
+    /**
+     *
+     */
+    readonly unit: LuaEntity
+    /**
+     *
+     */
+    readonly group: LuaUnitGroup
+
+}
+/**
+ * A static event mods can use to tell other mods they built something with a script.
+ * This event is only raised if a mod uses it with script.raise_event() or when &apos;raise_built&apos; is passed to <a href="LuaSurface.html#LuaSurface.create_entity">LuaSurface::create_entity</a>.
+ * Can be filtered using <a href="Event-Filters.html#LuaScriptRaisedBuiltEventFilters">LuaScriptRaisedBuiltEventFilters</a>
+ */
+interface script_raised_built extends event {
+    /**
+     *
+     */
+    readonly entity: LuaEntity
+
+}
+/**
+ * A static event mods can use to tell other mods they destroyed something with a script.
+ * This event is only raised if a mod uses it with script.raise_event() or when &apos;raise_destroy&apos; is passed to <a href="LuaEntity.html#LuaEntity.destroy">LuaEntity::destroy</a>.
+ *  Can be filtered using <a href="Event-Filters.html#LuaScriptRaisedDestroyEventFilters">LuaScriptRaisedDestroyEventFilters</a>
+ */
+interface script_raised_destroy extends event {
+    /**
+     *
+     */
+    readonly entity: LuaEntity
+
+}
+/**
+ * A static event mods can use to tell other mods they revived something with a script.
+ * This event is only raised if a mod uses it with script.raise_event() or when &apos;raise_revive&apos; is passed to <a href="LuaEntity.html#LuaEntity.revive">LuaEntity::revive</a>.
+ * Can be filtered using <a href="Event-Filters.html#LuaScriptRaisedReviveEventFilters">LuaScriptRaisedReviveEventFilters</a>
+ */
+interface script_raised_revive extends event {
+    /**
+     *
+     */
+    readonly entity: LuaEntity
+    /**
+     * (optional):  The tags associated with this entity if any.
+     */
+    readonly tags?: Tags
+
+}
+/**
+ * A static event mods can use to tell other mods they changed tiles on a surface with a script.
+ * This event is only raised if a mod uses it with script.raise_event() or when <code>raise_event</code> is passed to <a href="LuaSurface.html#LuaSurface.set_tiles">LuaSurface::set_tiles</a>.
+ */
+interface script_raised_set_tiles extends event {
+    /**
+     *
+     */
+    readonly surface_index: uint
+    /**
+     * Each Tile is a table: name :: stringposition :: Position
+     */
+    readonly tiles: Array<{
+        name: string,
+        position: Position
+    }>
 }

@@ -1,7 +1,3 @@
-declare const table: {
-    deepcopy<T>(this: void, value: T): T,
-};
-
 declare const game: LuaGameScript;
 
 declare const script: LuaBootstrap;
@@ -21,10 +17,14 @@ declare const data: {
     extend(values: any[]): void,
 };
 
-declare const global: { [key: string]: any };
+declare interface Globals {
 
-declare function log(str: LocalisedString): void;
+}
 
-declare function table_size(tbl: object): number;
+declare const global: Globals;
+
+declare function log(this: void, str: LocalisedString): void;
+
+declare function table_size(this: void, tbl: object): number;
 
 declare const serpent: Serpent;

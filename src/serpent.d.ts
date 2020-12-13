@@ -1,8 +1,8 @@
 interface Serpent {
-    dump(this: void, a: object, options: SerpentOptions): string
-    line(this: void, a: object, options: SerpentOptions): string
-    block(this: void, a: object, options: SerpentOptions): string
-    load(this: void, str: string, options?: {safe?: boolean}): string
+    dump(this: void, a: any, options: SerpentOptions): string
+    line(this: void, a: any, options?: SerpentOptions): string
+    block(this: void, a: any, options?: SerpentOptions): string
+    load(this: void, str: any, options?: {safe?: boolean}): string
 }
 
 interface SerpentOptions {

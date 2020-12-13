@@ -11,7 +11,23 @@ type TriggerTargetMask = string[];
 
 // The documentation in some places just says "Table", with extra info only available in the specific prototype doc
 // can eventually fix these on a per-case basis
-type Table = any;
+/** @luaTable */
+declare class LuaTable<K extends {} = {}, V = any> {
+    public readonly length: number;
+    public set(this: void, key: K, value: V | undefined): void;
+    public get(this: void, key: K): V | undefined;
+}
+
+interface LuaTableConstructor {
+    new(): LuaTable<any, any>;
+    readonly prototype: LuaTable<any, any>;
+}
+
+/** @luaTable */
+type Table<K = any, V = any> = object & LuaTable<K, V>;
+
+/** @luaTable */
+declare var Table: LuaTableConstructor;
 
 type damageType = 'physical' | 'impact' | 'poison' | 'explosion' | 'fire' | 'laser' | 'acid' | 'electric';
 
@@ -147,14 +163,16 @@ interface HeatConnection {
     direction: Direction
 }
 
-interface Sprite4Way {
-    north?: Sprite
+interface Sprite4WayImpl {
+    north: Sprite
     east: Sprite
     south: Sprite
     west: Sprite
     sheets?: SpriteNWaySheet[]
     sheet?: SpriteNWaySheet
 }
+
+type Sprite4Way = Sprite4WayImpl | Sprite;
 
 interface Sprite {
     filename?: FileName
