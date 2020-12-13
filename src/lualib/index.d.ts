@@ -1,2 +1,2 @@
-import 'math2d';
-import 'util';
+/// <reference path="./math2d.d.ts" />
+/// <reference path="./util.d.ts" />
